@@ -1,7 +1,7 @@
 # 環境構築手順
 以下に環境構築手順を記載します。
 
-## DB・Swaggerの起動
+## Swaggerの起動
 ```bash
 docker compose up -d
 ```
