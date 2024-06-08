@@ -6,6 +6,8 @@ info:
 tags:
   - name: warehouse
     description: 倉庫情報API
+  - name: comment
+    description: コメントAPI
   - name: hello
     description: Hello API
 host: 'localhost:8003'
@@ -33,6 +35,14 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Warehouse'
+        400:
+          description: パラメータエラー
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: 該当する倉庫エリアが存在しません
   /warehouse:
     get:
       tags:
@@ -45,7 +55,7 @@ paths:
         - name: warehouse_id
           in: query
           description: 倉庫ID
-          required: false
+          required: true
           type: integer
       responses:
         '200':
@@ -53,14 +63,96 @@ paths:
           schema:
             type: object
             $ref: '#/definitions/Warehouse'
-        default:
-          description: エラーレスポンス
+        400:
+          description: パラメータエラー
+          schema:
+              type: object
+              properties:
+                error:
+                  type: string
+                  example: 該当する倉庫が存在しません
+  /comments:
+    get:
+      tags:
+        - comment
+      summary: コメント取得API
+      description: "倉庫IDからコメントを一括取得するAPIです"
+      produces:
+        - application/json
+      parameters:
+        - name: warehouse_id
+          in: query
+          description: 倉庫ID
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 取得成功
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Comment"
+        400:
+          description: パラメータエラー
           schema:
             type: object
             properties:
               error:
                 type: string
-                example: エラーメッセージ
+                example: 該当する倉庫が存在しません
+  /comment:
+    post:
+      tags:
+        - comment
+      summary: コメント登録API
+      description: "倉庫IDにコメントを登録するAPIです"
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: comment
+          description: コメント情報
+          required: true
+          schema:
+            $ref: "#/definitions/CommentRequest"
+      responses:
+        201:
+          description: 登録成功
+          schema:
+            type: object
+            $ref: "#/definitions/Comment"
+        400:
+          description: パラメータエラー
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: パラメータエラー
+    delete:
+      tags:
+        - comment
+      summary: コメント削除API
+      description: "倉庫IDとコメントIDからコメントを削除するAPIです"
+      produces:
+        - application/json
+      parameters:
+        - name: comment_id
+          in: query
+          description: コメントID
+          required: true
+          type: integer
+      responses:
+        204:
+          description: 削除成功
+        400:
+          description: パラメータエラー
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: 該当する倉庫が存在しません
   /hello:
     get:
       tags:
@@ -96,6 +188,45 @@ definitions:
         type: number
         format: double
         example: 139.692
+  Comment:
+    type: object
+    properties:
+      uid:
+        type: string
+        example: user1
+      warehouse_id:
+        type: integer
+        example: 1
+      contents:
+        type: string
+        example: テストコメント
+      created_at:
+        type: string
+        example: 2022-07-02 00:00:00
+  CommentRequest:
+    type: object
+    properties:
+      uid:
+        type: string
+        example: user1
+      warehouse_id:
+        type: integer
+        example: 1
+      contents:
+        type: string
+        example: テストコメント
+  User:
+    type: object
+    properties:
+      uid:
+        type: string
+        example: 'user1'
+      user_name:
+        type: string
+        example: 'ユーザー1'
+      fcm_token_id:
+        type: string
+        example: 'fcm_token_id'
 
 externalDocs:
   description: 'Find out more about Swagger'
