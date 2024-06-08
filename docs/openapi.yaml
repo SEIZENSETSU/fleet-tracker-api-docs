@@ -87,7 +87,7 @@ definitions:
         example: 11
       warehouse_name:
         type: string
-        example: エルフーズ東京工場
+        example: ハルフーズ東京工場
       warehouse_latitude:
         type: number
         format: double
