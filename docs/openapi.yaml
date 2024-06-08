@@ -1,131 +1,102 @@
 swagger: '2.0'
 info:
   version: '1.0.0'
-  title: 'Sample Project API'
-  description: 'このAPIはサンプルプロジェクトです。'
+  title: 'Fleet Tracker API'
+  description: 'このAPIはFleet TrackerのためのAPIです。'
 tags:
-  - name: customers
-    description: 顧客情報API
+  - name: warehouse
+    description: 倉庫情報API
   - name: hello
     description: Hello API
 host: 'localhost:8003'
 schemes:
   - http
 paths:
-  /customers:
+  /warehouses:
     get:
       tags:
-        - customers
-      summary: 顧客情報取得API
-      description: '顧客情報を取得します。'
-      operationId: getUser
+        - warehouse
+      summary: 倉庫一覧情報取得API
+      description: '倉庫の一覧情報を取得します'
+      produces:
+        - application/json
+      parameters:
+        - name: warehouse_area_id
+          in: query
+          description: 倉庫エリアID
+          required: false
+          type: integer
       responses:
-        default:
+        '200':
           description: 取得成功
           schema:
             type: array
             items:
-              $ref: '#/definitions/Customer'
-    post:
+              $ref: '#/definitions/Warehouse'
+  /warehouse:
+    get:
       tags:
-        - customers
-      summary: 顧客情報登録API
-      description: '顧客情報を登録します。'
+        - warehouse
+      summary: 倉庫情報取得API
+      description: '倉庫エリアIDまたは倉庫IDから、倉庫情報を取得するAPIです'
+      produces:
+        - application/json
       parameters:
-        - in: body
-          name: body
-          description: '顧客情報を登録します。'
-          required: true
-          schema:
-            $ref: '#/definitions/Customer'
-      responses:
-        200:
-          description: 登録成功
-          schema:
-            $ref: '#/definitions/Customer'
-  /customers/{id}:
-    put:
-      tags:
-        - customers
-      summary: 顧客情報更新API
-      description: '顧客情報を更新します。'
-      parameters:
-        - name: id
-          in: path
-          description: 顧客ID
-          required: true
+        - name: warehouse_id
+          in: query
+          description: 倉庫ID
+          required: false
           type: integer
-          format: long
-        - in: body
-          name: body
-          description: '顧客情報を更新します。'
-          required: true
-          schema:
-            $ref: '#/definitions/CustomerRequest'
       responses:
-        default:
-          description: 更新成功
+        '200':
+          description: 取得成功
           schema:
-            $ref: '#/definitions/Customer'
-    delete:
-      tags:
-        - customers
-      summary: 顧客情報削除API
-      description: '顧客情報を削除します。'
-      parameters:
-        - name: id
-          in: path
-          description: 顧客ID
-          required: true
-          type: integer
-          format: long
-      responses:
+            type: object
+            $ref: '#/definitions/Warehouse'
         default:
-          description: 削除成功
+          description: エラーレスポンス
           schema:
-            $ref: '#/definitions/Customer'
+            type: object
+            properties:
+              error:
+                type: string
+                example: エラーメッセージ
   /hello:
     get:
       tags:
         - hello
       summary: Hello API
       description: 'Hello API'
+      produces:
+        - application/json
       responses:
-        default:
+        '200':
           description: 取得成功
           schema:
             type: string
             example: 'Hello, World!'
 definitions:
-  Customer:
+  Warehouse:
     type: object
-    required:
-      - id
-      - name
-      - lastName
     properties:
-      id:
+      warehouse_id:
         type: integer
-        format: long
-        example: 100
-      name:
+        example: 1
+      warehouse_area_id:
+        type: integer
+        example: 11
+      warehouse_name:
         type: string
-        example: Taro
-      lastName:
-        type: string
-        example: Yamada
-  CustomerRequest:
-    type: object
-    required:
-      - name
-      - lastName
-    properties:
-      name:
-        type: string
-        example: Taro
-      lastName:
-        type: string
-        example: Yamada
+        example: エルフーズ東京工場
+      warehouse_latitude:
+        type: number
+        format: double
+        example: 35.689
+      warehouse_longitude:
+        type: number
+        format: double
+        example: 139.692
+
 externalDocs:
   description: 'Find out more about Swagger'
   url: 'http://swagger.io'
