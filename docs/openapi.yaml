@@ -120,7 +120,7 @@ paths:
           description: 登録成功
           schema:
             type: object
-            $ref: "#/definitions/Comment"
+            $ref: "#/definitions/CommentRequest"
         400:
           description: パラメータエラー
           schema:
