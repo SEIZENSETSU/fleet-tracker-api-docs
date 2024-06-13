@@ -386,9 +386,6 @@ definitions:
       warehouse_id:
         type: "integer"
         example: 1
-      uid:
-        type: "string"
-        example: "user1"
       delay_time:
         type: "integer"
         example: 10
