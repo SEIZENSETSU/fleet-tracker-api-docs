@@ -6,6 +6,8 @@ info:
 tags:
   - name: warehouse
     description: 倉庫情報API
+  - name: delay
+    description: 遅延情報API
   - name: comment
     description: コメントAPI
   - name: hello
@@ -43,6 +45,30 @@ paths:
               error:
                 type: string
                 example: 該当する倉庫エリアが存在しません
+  /areas/warehouses:
+    get:
+      tags:
+        - warehouse
+      summary: ローカルエリアごとの倉庫情報一括取得API
+      description: 'ローカルエリアおよび倉庫エリアでグループ化された倉庫の一覧情報を取得します'
+      produces:
+        - application/json
+      parameters: [ ]
+      responses:
+        '200':
+          description: 取得成功
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LocalAreaResponse'
+        400:
+          description: パラメータエラー
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: 'エラー: 無効なリクエストです'
   /warehouse:
     get:
       tags:
@@ -66,11 +92,11 @@ paths:
         400:
           description: パラメータエラー
           schema:
-              type: object
-              properties:
-                error:
-                  type: string
-                  example: 該当する倉庫が存在しません
+            type: object
+            properties:
+              error:
+                type: string
+                example: 該当する倉庫が存在しません
   /comments:
     get:
       tags:
@@ -153,6 +179,63 @@ paths:
               error:
                 type: string
                 example: 該当する倉庫が存在しません
+  /delay:
+    get:
+      tags:
+        - delay
+      summary: 遅延情報取得API
+      description: "倉庫IDから遅延情報を取得するAPIです"
+      produces:
+        - application/json
+      parameters:
+        - name: warehouse_id
+          in: query
+          description: 倉庫ID
+          required: true
+          type: integer
+      responses:
+        200:
+          description: 取得成功
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/DelayInformation"
+        400:
+          description: パラメータエラー
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: 該当する倉庫が存在しません
+    post:
+      tags:
+        - delay
+      summary: 遅延情報登録API
+      description: "倉庫IDに遅延情報を登録するAPIです"
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: delay
+          description: 遅延情報
+          required: true
+          schema:
+            $ref: "#/definitions/DelayInformationRequest"
+      responses:
+        201:
+          description: 登録成功
+          schema:
+            type: object
+            $ref: "#/definitions/DelayInformationRequest"
+        400:
+          description: パラメータエラー
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: パラメータエラー
   /hello:
     get:
       tags:
@@ -168,6 +251,41 @@ paths:
             type: string
             example: 'Hello, World!'
 definitions:
+  LocalAreaResponse:
+    type: object
+    properties:
+      local_area_id:
+        type: integer
+        example: 1
+      local_area_name:
+        type: string
+        example: 関東
+      warehouse_areas:
+        type: array
+        items:
+          type: object
+          properties:
+            warehouse_area_id:
+              type: integer
+              example: 1
+            local_area_id:
+              type: integer
+              example: 1
+            warehouse_area_name:
+              type: string
+              example: 東京
+            warehouse_area_latitude:
+              type: number
+              format: double
+              example: 35.689
+            warehouse_area_longitude:
+              type: number
+              format: double
+              example: 139.692
+            warehouses:
+              type: array
+              items:
+                $ref: '#/definitions/Warehouse'
   Warehouse:
     type: object
     properties:
@@ -230,6 +348,50 @@ definitions:
       fcm_token_id:
         type: string
         example: 'fcm_token_id'
+  DelayInformation:
+    type: "object"
+    properties:
+      delay_information_id:
+        type: "integer"
+        example: 1
+      warehouse_id:
+        type: "integer"
+        example: 1
+      delay_time_detail:
+        type: array
+        items:
+          type: object
+          properties:
+            delay_time:
+              type: "integer"
+              example: 10
+            answer_count:
+              type: "integer"
+              example: 3
+      created_at:
+        type: "string"
+        example: "2022-07-02 00:00:00"
+        format: "date-time"
+      updated_at:
+        type: "string"
+        example: "2022-07-02 00:00:00"
+        format: "date-time"
+  DelayInformationRequest:
+    type: "object"
+    required:
+      - "warehouse_id"
+      - "uid"
+      - "delay_time"
+    properties:
+      warehouse_id:
+        type: "integer"
+        example: 1
+      uid:
+        type: "string"
+        example: "user1"
+      delay_time:
+        type: "integer"
+        example: 10
 
 externalDocs:
   description: 'Find out more about Swagger'
