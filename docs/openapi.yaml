@@ -298,9 +298,9 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: warehouse_id
+        - name: warehouse_area_id
           in: query
-          description: 倉庫ID
+          description: 倉庫エリアID
           required: true
           type: integer
       responses:
@@ -476,6 +476,9 @@ definitions:
       warehouse_id:
         type: "integer"
         example: 1
+      warehouse_name:
+        type: string
+        example: ハルフーズ東京工場
       delay_time_detail:
         type: array
         items:
