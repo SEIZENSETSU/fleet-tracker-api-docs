@@ -10,6 +10,8 @@ tags:
     description: 遅延情報API
   - name: comment
     description: コメントAPI
+  - name: user
+    description: ユーザーAPI
   - name: hello
     description: Hello API
 host: 'localhost:8003'
@@ -179,6 +181,114 @@ paths:
               error:
                 type: string
                 example: 該当する倉庫が存在しません
+  /user:
+    get:
+      tags:
+        - user
+      summary: ユーザー情報取得API
+      description: "ユーザーIDからユーザー情報を取得するAPIです"
+      produces:
+        - application/json
+      parameters:
+        - name: uid
+          in: query
+          description: ユーザーID
+          required: true
+          type: string
+      responses:
+        200:
+          description: 取得成功
+          schema:
+            type: object
+            $ref: "#/definitions/UserResponse"
+        400:
+          description: パラメータエラー
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: 該当するユーザーが存在しません
+    post:
+      tags:
+        - user
+      summary: ユーザー登録API
+      description: "ユーザーを登録するAPIです"
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: ユーザー情報
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        201:
+          description: 登録成功
+          schema:
+            type: object
+            $ref: "#/definitions/User"
+        400:
+          description: パラメータエラー
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: パラメータエラー
+    put:
+      tags:
+        - user
+      summary: ユーザー更新API
+      description: "ユーザーを更新するAPIです"
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: ユーザー情報
+          required: true
+          schema:
+            $ref: "#/definitions/User"
+      responses:
+        200:
+          description: 更新成功
+          schema:
+            type: object
+            $ref: "#/definitions/User"
+        400:
+          description: パラメータエラー
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: パラメータエラー
+    delete:
+      tags:
+        - user
+      summary: ユーザー削除API
+      description: "ユーザーを削除するAPIです"
+      produces:
+        - application/json
+      parameters:
+        - name: uid
+          in: query
+          description: ユーザーID
+          required: true
+          type: string
+      responses:
+        204:
+          description: 削除成功
+        400:
+          description: パラメータエラー
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: 該当するユーザーが存在しません
   /delay:
     get:
       tags:
@@ -212,7 +322,7 @@ paths:
       tags:
         - delay
       summary: 遅延情報登録API
-      description: "倉庫IDに遅延情報を登録するAPIです"
+      description: "倉庫IDに遅延情報を登録するAPIです。 delay_stateにはnormal, pause, halfHour, anHour, impossibleのいずれかを指定してください。"
       produces:
         - application/json
       parameters:
@@ -348,6 +458,15 @@ definitions:
       fcm_token_id:
         type: string
         example: 'fcm_token_id'
+  UserResponse:
+    type: object
+    properties:
+      uid:
+        type: string
+        example: 'user1'
+      user_name:
+        type: string
+        example: 'ユーザー1'
   DelayInformation:
     type: "object"
     properties:
@@ -362,9 +481,10 @@ definitions:
         items:
           type: object
           properties:
-            delay_time:
-              type: "integer"
-              example: 10
+            delay_state:
+              type: string
+              example: normal
+              description: normal, pause, halfHour, anHour, impossibleのいずれか
             answer_count:
               type: "integer"
               example: 3
@@ -381,14 +501,15 @@ definitions:
     required:
       - "warehouse_id"
       - "uid"
-      - "delay_time"
+      - "delay_state"
     properties:
       warehouse_id:
         type: "integer"
         example: 1
-      delay_time:
-        type: "integer"
-        example: 10
+      delay_state:
+        type: string
+        example: normal
+        description: normal, pause, halfHour, anHour, impossibleのいずれか
 
 externalDocs:
   description: 'Find out more about Swagger'
