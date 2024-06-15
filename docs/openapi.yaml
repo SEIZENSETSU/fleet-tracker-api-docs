@@ -41,6 +41,8 @@ paths:
               $ref: '#/definitions/Warehouse'
         404:
           description: 該当する倉庫エリアが存在しません
+        500:
+          description: サーバーエラー
   /areas/warehouses:
     get:
       tags:
@@ -57,6 +59,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LocalAreaResponse'
+        500:
+          description: サーバーエラー
   /warehouse:
     get:
       tags:
@@ -79,6 +83,8 @@ paths:
             $ref: '#/definitions/Warehouse'
         404:
           description: 該当する倉庫が存在しません
+        500:
+          description: サーバーエラー
   /comments:
     get:
       tags:
@@ -102,6 +108,8 @@ paths:
               $ref: "#/definitions/Comment"
         404:
           description: 該当するコメントが存在しません
+        500:
+          description: サーバーエラー
   /comment:
     post:
       tags:
@@ -125,6 +133,8 @@ paths:
             $ref: "#/definitions/CommentRequest"
         404:
           description: 該当するコメントが存在しません
+        500:
+          description: サーバーエラー
     delete:
       tags:
         - comment
@@ -143,6 +153,8 @@ paths:
           description: 削除成功
         404:
           description: 該当するコメントが存在しません
+        500:
+          description: サーバーエラー
   /user:
     get:
       tags:
@@ -165,6 +177,8 @@ paths:
             $ref: "#/definitions/UserResponse"
         404:
           description: ユーザーが存在しません
+        500:
+          description: サーバーエラー
     post:
       tags:
         - user
@@ -193,6 +207,8 @@ paths:
               error:
                 type: string
                 example: パラメータエラー
+        500:
+          description: サーバーエラー
     put:
       tags:
         - user
@@ -215,6 +231,8 @@ paths:
             $ref: "#/definitions/User"
         404:
           description: ユーザーが存在しません
+        500:
+          description: サーバーエラー
     delete:
       tags:
         - user
@@ -233,6 +251,8 @@ paths:
           description: 削除成功
         404:
           description: ユーザーが存在しません
+        500:
+          description: サーバーエラー
   /delay:
     get:
       tags:
@@ -256,6 +276,8 @@ paths:
               $ref: "#/definitions/DelayInformation"
         404:
           description: 該当する遅延情報が存在しません
+        500:
+          description: サーバーエラー
     post:
       tags:
         - delay
@@ -284,6 +306,8 @@ paths:
               error:
                 type: string
                 example: パラメータエラー
+        500:
+          description: サーバーエラー
   /hello:
     get:
       tags:
