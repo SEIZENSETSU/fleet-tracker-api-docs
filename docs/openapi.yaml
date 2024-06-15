@@ -39,14 +39,8 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Warehouse'
-        400:
-          description: パラメータエラー
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: 該当する倉庫エリアが存在しません
+        404:
+          description: 該当する倉庫エリアが存在しません
   /areas/warehouses:
     get:
       tags:
@@ -63,14 +57,6 @@ paths:
             type: array
             items:
               $ref: '#/definitions/LocalAreaResponse'
-        400:
-          description: パラメータエラー
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: 'エラー: 無効なリクエストです'
   /warehouse:
     get:
       tags:
@@ -91,14 +77,8 @@ paths:
           schema:
             type: object
             $ref: '#/definitions/Warehouse'
-        400:
-          description: パラメータエラー
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: 該当する倉庫が存在しません
+        404:
+          description: 該当する倉庫が存在しません
   /comments:
     get:
       tags:
@@ -120,14 +100,8 @@ paths:
             type: array
             items:
               $ref: "#/definitions/Comment"
-        400:
-          description: パラメータエラー
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: 該当する倉庫が存在しません
+        404:
+          description: 該当するコメントが存在しません
   /comment:
     post:
       tags:
@@ -149,14 +123,8 @@ paths:
           schema:
             type: object
             $ref: "#/definitions/CommentRequest"
-        400:
-          description: パラメータエラー
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: パラメータエラー
+        404:
+          description: 該当するコメントが存在しません
     delete:
       tags:
         - comment
@@ -173,14 +141,8 @@ paths:
       responses:
         204:
           description: 削除成功
-        400:
-          description: パラメータエラー
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: 該当する倉庫が存在しません
+        404:
+          description: 該当するコメントが存在しません
   /user:
     get:
       tags:
@@ -201,14 +163,8 @@ paths:
           schema:
             type: object
             $ref: "#/definitions/UserResponse"
-        400:
-          description: パラメータエラー
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: 該当するユーザーが存在しません
+        404:
+          description: ユーザーが存在しません
     post:
       tags:
         - user
@@ -257,14 +213,8 @@ paths:
           schema:
             type: object
             $ref: "#/definitions/User"
-        400:
-          description: パラメータエラー
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: パラメータエラー
+        404:
+          description: ユーザーが存在しません
     delete:
       tags:
         - user
@@ -281,14 +231,8 @@ paths:
       responses:
         204:
           description: 削除成功
-        400:
-          description: パラメータエラー
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: 該当するユーザーが存在しません
+        404:
+          description: ユーザーが存在しません
   /delay:
     get:
       tags:
@@ -310,14 +254,8 @@ paths:
             type: array
             items:
               $ref: "#/definitions/DelayInformation"
-        400:
-          description: パラメータエラー
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: 該当する倉庫が存在しません
+        404:
+          description: 該当する遅延情報が存在しません
     post:
       tags:
         - delay
