@@ -43,6 +43,46 @@ paths:
           description: 該当する倉庫エリアが存在しません
         500:
           description: サーバーエラー
+  /warehouses/search:
+    get:
+      tags:
+        - warehouse
+      summary: 倉庫検索API
+      description: '倉庫名から倉庫情報を取得するAPIです。倉庫エリア内にいる場合は、該当エリア内の倉庫情報を近い順でソートして返し、倉庫エリア外にいる場合は近場の倉庫エリア情報を返します。お気に入り登録した倉庫IDを指定することで、倉庫エリア内外問わず、倉庫情報を取得できます。'
+      produces:
+        - application/json
+      parameters:
+        - name: favorite_warehouse_ids
+          in: query
+          description: お気に入りの倉庫ID
+          required: false
+          type: integer
+          items:
+            type: number
+        - name: user_latitude
+          in: query
+          description: ユーザーの緯度
+          required: true
+          type: number
+          format: double
+        - name: user_longitude
+          in: query
+          description: ユーザーの経度
+          required: true
+          type: number
+          format: double
+      responses:
+        '200':
+          description: 取得成功(例として倉庫エリアと倉庫情報を同時に返していますが本来はどちらかか片方が返されます。)
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/SearchWarehousesResult'
+        404:
+          description: 該当する倉庫が存在しません
+        500:
+          description: サーバーエラー
+
   /areas/warehouses:
     get:
       tags:
@@ -378,6 +418,76 @@ definitions:
         type: number
         format: double
         example: 139.692
+  SearchWarehousesResult:
+    type: object
+    properties:
+      is_invading:
+        type: boolean
+        example: false
+        description: 倉庫エリアに侵入しているかどうか
+      warehouses:
+        type: array
+        description: ユーザーが倉庫エリア内にいる場合は、倉庫情報を返す。
+        items:
+          type: object
+          properties:
+            warehouse_id:
+              type: integer
+              example: 1
+            warehouse_name:
+              type: string
+              example: ハルフーズ東京工場
+            delay_state:
+              type: string
+              example: normal
+              description: normal, pause, halfHour, anHour, impossibleのいずれか
+            distance:
+              type: number
+              format: double
+              example: 10
+              description: ユーザーとの距離(km)
+      favorite_warehouses:
+        type: array
+        description: お気に入りを指定した場合は、該当する倉庫情報を返す。
+        items:
+          type: object
+          properties:
+            warehouse_id:
+              type: integer
+              example: 1
+            warehouse_name:
+              type: string
+              example: ハルフーズ東京工場
+            delay_state:
+              type: string
+              example: normal
+              description: normal, pause, halfHour, anHour, impossibleのいずれか
+            distance:
+              type: number
+              format: double
+              example: 10
+              description: ユーザーとの距離(km)
+      warehouse_areas:
+        type: array
+        description: ユーザーが倉庫エリア外にいる場合は、倉庫エリア情報を返す。
+        items:
+          type: object
+          properties:
+            warehouse_area_id:
+              type: integer
+              example: 1
+            warehouse_area_name:
+              type: string
+              example: 東京
+            delay_state:
+              type: string
+              example: normal
+              description: normal, pause, halfHour, anHour, impossibleのいずれか
+            distance:
+              type: number
+              format: double
+              example: 10
+              description: ユーザーとの距離(km)
   Comment:
     type: object
     properties:
