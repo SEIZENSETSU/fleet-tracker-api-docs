@@ -75,14 +75,52 @@ paths:
         '200':
           description: 取得成功(例として倉庫エリアと倉庫情報を同時に返していますが本来はどちらかか片方が返されます。)
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/SearchWarehousesResult'
+            type: object
+            $ref: '#/definitions/SearchWarehousesResult'
+          examples:
+            example1:
+              is_invading: true
+              warehouses:
+                - warehouse_id: 1
+                  warehouse_name: ハルフーズ東京工場
+                  delay_state: normal
+                  distance: 10
+                - warehouse_id: 2
+                  warehouse_name: ハルフーズ東京工場2
+                  delay_state: normal
+                  distance: 20
+              favorite_warehouses:
+                - warehouse_id: 5
+                  warehouse_name: ハルフーズ大阪工場
+                  delay_state: normal
+                  distance: 10
+              warehouse_areas: []
+            example2:
+              is_invading: true
+              warehouses: []
+              favorite_warehouses: []
+              warehouse_areas:
+                - warehouse_area_id: 1
+                  warehouse_area_name: 東京
+                  delay_state: normal
+                  distance: 10
+            example3:
+              is_invading: false
+              warehouses: []
+              favorite_warehouses:
+                - warehouse_id: 5
+                  warehouse_name: ハルフーズ大阪工場
+                  delay_state: normal
+                  distance: 10
+              warehouse_areas:
+                - warehouse_area_id: 1
+                  warehouse_area_name: 東京
+                  delay_state: normal
+                  distance: 10
         404:
           description: 該当する倉庫が存在しません
         500:
           description: サーバーエラー
-
   /areas/warehouses:
     get:
       tags:
