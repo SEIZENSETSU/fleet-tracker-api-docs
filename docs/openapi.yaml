@@ -14,9 +14,9 @@ tags:
     description: ユーザーAPI
   - name: hello
     description: Hello API
-host: 'localhost:8003'
+host: 'swagger-node-tnvlhcq2ja-uc.a.run.app'
 schemes:
-  - http
+  - https
 paths:
   /warehouses:
     get:
