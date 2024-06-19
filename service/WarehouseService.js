@@ -129,7 +129,14 @@ exports.warehousesSearchGET = function(user_latitude, user_longitude, favorite_w
             "distance": 10
           }
         ],
-        "warehouse_areas": []
+        "warehouse_areas": [
+          {
+            "warehouse_area_id": 1,
+            "warehouse_area_name": "東京",
+            "delay_state": "normal",
+            "distance": 10
+          }
+        ]
       },
       {
         "is_invading": true,
