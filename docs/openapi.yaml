@@ -14,7 +14,7 @@ tags:
     description: ユーザーAPI
   - name: hello
     description: Hello API
-host: 'swagger-node-tnvlhcq2ja-uc.a.run.app'
+host: 'fleet-tracker-api-docs-tnvlhcq2ja-uc.a.run.app'
 schemes:
   - https
 paths:
