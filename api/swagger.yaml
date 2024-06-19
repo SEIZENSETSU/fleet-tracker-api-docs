@@ -1,0 +1,695 @@
+---
+swagger: "2.0"
+info:
+  description: "このAPIはFleet TrackerのためのAPIです。"
+  version: "1.0.0"
+  title: "Fleet Tracker API"
+host: "localhost:8003"
+tags:
+- name: "warehouse"
+  description: "倉庫情報API"
+- name: "delay"
+  description: "遅延情報API"
+- name: "comment"
+  description: "コメントAPI"
+- name: "user"
+  description: "ユーザーAPI"
+- name: "hello"
+  description: "Hello API"
+schemes:
+- "http"
+paths:
+  /warehouses:
+    get:
+      tags:
+      - "warehouse"
+      summary: "倉庫一覧情報取得API"
+      description: "倉庫の一覧情報を取得します"
+      operationId: "warehousesGET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "warehouse_area_id"
+        in: "query"
+        description: "倉庫エリアID"
+        required: false
+        type: "integer"
+      responses:
+        "200":
+          description: "取得成功"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Warehouse"
+        "404":
+          description: "該当する倉庫エリアが存在しません"
+        "500":
+          description: "サーバーエラー"
+      x-swagger-router-controller: "Warehouse"
+  /warehouses/search:
+    get:
+      tags:
+      - "warehouse"
+      summary: "倉庫検索API"
+      description: "倉庫名から倉庫情報を取得するAPIです。倉庫エリア内にいる場合は、該当エリア内の倉庫情報を近い順でソートして返し、倉庫エリア\
+        外にいる場合は近場の倉庫エリア情報を返します。お気に入り登録した倉庫IDを指定することで、倉庫エリア内外問わず、倉庫情報を取得できます。"
+      operationId: "warehousesSearchGET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "favorite_warehouse_ids"
+        in: "query"
+        description: "お気に入りの倉庫ID"
+        required: false
+        type: "integer"
+        items:
+          type: "number"
+      - name: "user_latitude"
+        in: "query"
+        description: "ユーザーの緯度"
+        required: true
+        type: "number"
+        format: "double"
+      - name: "user_longitude"
+        in: "query"
+        description: "ユーザーの経度"
+        required: true
+        type: "number"
+        format: "double"
+      responses:
+        "200":
+          description: "取得成功(例として倉庫エリアと倉庫情報を同時に返していますが本来はどちらかか片方が返されます。)"
+          schema:
+            $ref: "#/definitions/SearchWarehousesResult"
+        "404":
+          description: "該当する倉庫が存在しません"
+        "500":
+          description: "サーバーエラー"
+      x-swagger-router-controller: "Warehouse"
+  /areas/warehouses:
+    get:
+      tags:
+      - "warehouse"
+      summary: "ローカルエリアごとの倉庫情報一括取得API"
+      description: "ローカルエリアおよび倉庫エリアでグループ化された倉庫の一覧情報を取得します"
+      operationId: "areasWarehousesGET"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "取得成功"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/LocalAreaResponse"
+        "500":
+          description: "サーバーエラー"
+      x-swagger-router-controller: "Warehouse"
+  /warehouse:
+    get:
+      tags:
+      - "warehouse"
+      summary: "倉庫情報取得API"
+      description: "倉庫エリアIDまたは倉庫IDから、倉庫情報を取得するAPIです"
+      operationId: "warehouseGET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "warehouse_id"
+        in: "query"
+        description: "倉庫ID"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "取得成功"
+          schema:
+            $ref: "#/definitions/Warehouse"
+        "404":
+          description: "該当する倉庫が存在しません"
+        "500":
+          description: "サーバーエラー"
+      x-swagger-router-controller: "Warehouse"
+  /comments:
+    get:
+      tags:
+      - "comment"
+      summary: "コメント取得API"
+      description: "倉庫IDからコメントを一括取得するAPIです"
+      operationId: "commentsGET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "warehouse_id"
+        in: "query"
+        description: "倉庫ID"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "取得成功"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Comment"
+        "404":
+          description: "該当するコメントが存在しません"
+        "500":
+          description: "サーバーエラー"
+      x-swagger-router-controller: "Comment"
+  /comment:
+    post:
+      tags:
+      - "comment"
+      summary: "コメント登録API"
+      description: "倉庫IDにコメントを登録するAPIです"
+      operationId: "commentPOST"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "comment"
+        description: "コメント情報"
+        required: true
+        schema:
+          $ref: "#/definitions/CommentRequest"
+      responses:
+        "201":
+          description: "登録成功"
+          schema:
+            $ref: "#/definitions/CommentRequest"
+        "404":
+          description: "該当するコメントが存在しません"
+        "500":
+          description: "サーバーエラー"
+      x-swagger-router-controller: "Comment"
+    delete:
+      tags:
+      - "comment"
+      summary: "コメント削除API"
+      description: "倉庫IDとコメントIDからコメントを削除するAPIです"
+      operationId: "commentDELETE"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "comment_id"
+        in: "query"
+        description: "コメントID"
+        required: true
+        type: "integer"
+      responses:
+        "204":
+          description: "削除成功"
+        "404":
+          description: "該当するコメントが存在しません"
+        "500":
+          description: "サーバーエラー"
+      x-swagger-router-controller: "Comment"
+  /user:
+    get:
+      tags:
+      - "user"
+      summary: "ユーザー情報取得API"
+      description: "ユーザーIDからユーザー情報を取得するAPIです"
+      operationId: "userGET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "uid"
+        in: "query"
+        description: "ユーザーID"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "取得成功"
+          schema:
+            $ref: "#/definitions/UserResponse"
+        "404":
+          description: "ユーザーが存在しません"
+        "500":
+          description: "サーバーエラー"
+      x-swagger-router-controller: "User"
+    post:
+      tags:
+      - "user"
+      summary: "ユーザー登録API"
+      description: "ユーザーを登録するAPIです"
+      operationId: "userPOST"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "user"
+        description: "ユーザー情報"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "201":
+          description: "登録成功"
+          schema:
+            $ref: "#/definitions/User"
+        "400":
+          description: "パラメータエラー"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        "500":
+          description: "サーバーエラー"
+      x-swagger-router-controller: "User"
+    put:
+      tags:
+      - "user"
+      summary: "ユーザー更新API"
+      description: "ユーザーを更新するAPIです"
+      operationId: "userPUT"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "user"
+        description: "ユーザー情報"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        "200":
+          description: "更新成功"
+          schema:
+            $ref: "#/definitions/User"
+        "404":
+          description: "ユーザーが存在しません"
+        "500":
+          description: "サーバーエラー"
+      x-swagger-router-controller: "User"
+    delete:
+      tags:
+      - "user"
+      summary: "ユーザー削除API"
+      description: "ユーザーを削除するAPIです"
+      operationId: "userDELETE"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "uid"
+        in: "query"
+        description: "ユーザーID"
+        required: true
+        type: "string"
+      responses:
+        "204":
+          description: "削除成功"
+        "404":
+          description: "ユーザーが存在しません"
+        "500":
+          description: "サーバーエラー"
+      x-swagger-router-controller: "User"
+  /delay:
+    get:
+      tags:
+      - "delay"
+      summary: "遅延情報取得API"
+      description: "倉庫IDから遅延情報を取得するAPIです"
+      operationId: "delayGET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "warehouse_area_id"
+        in: "query"
+        description: "倉庫エリアID"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "取得成功"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/DelayInformation"
+        "404":
+          description: "該当する遅延情報が存在しません"
+        "500":
+          description: "サーバーエラー"
+      x-swagger-router-controller: "Delay"
+    post:
+      tags:
+      - "delay"
+      summary: "遅延情報登録API"
+      description: "倉庫IDに遅延情報を登録するAPIです。 delay_stateにはnormal, pause, halfHour, anHour,\
+        \ impossibleのいずれかを指定してください。"
+      operationId: "delayPOST"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "delay"
+        description: "遅延情報"
+        required: true
+        schema:
+          $ref: "#/definitions/DelayInformationRequest"
+      responses:
+        "201":
+          description: "登録成功"
+          schema:
+            $ref: "#/definitions/DelayInformationRequest"
+        "400":
+          description: "パラメータエラー"
+          schema:
+            $ref: "#/definitions/inline_response_400"
+        "500":
+          description: "サーバーエラー"
+      x-swagger-router-controller: "Delay"
+  /hello:
+    get:
+      tags:
+      - "hello"
+      summary: "Hello API"
+      description: "Hello API"
+      operationId: "helloGET"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "取得成功"
+          schema:
+            type: "string"
+            example: "Hello, World!"
+      x-swagger-router-controller: "Hello"
+definitions:
+  LocalAreaResponse:
+    type: "object"
+    properties:
+      local_area_id:
+        type: "integer"
+        example: 1
+      local_area_name:
+        type: "string"
+        example: "関東"
+      warehouse_areas:
+        type: "array"
+        items:
+          $ref: "#/definitions/LocalAreaResponse_warehouse_areas"
+    example:
+      local_area_name: "関東"
+      warehouse_areas:
+      - warehouse_area_name: "東京"
+        warehouse_area_latitude: 35.68900000000000005684341886080801486968994140625
+        warehouse_area_id: 1
+        warehouse_area_longitude: 139.6920000000000072759576141834259033203125
+        warehouses:
+        - warehouse_longitude: 139.6920000000000072759576141834259033203125
+          warehouse_name: "ハルフーズ東京工場"
+          warehouse_area_id: 11
+          warehouse_latitude: 35.68900000000000005684341886080801486968994140625
+          warehouse_id: 1
+        - warehouse_longitude: 139.6920000000000072759576141834259033203125
+          warehouse_name: "ハルフーズ東京工場"
+          warehouse_area_id: 11
+          warehouse_latitude: 35.68900000000000005684341886080801486968994140625
+          warehouse_id: 1
+        local_area_id: 1
+      - warehouse_area_name: "東京"
+        warehouse_area_latitude: 35.68900000000000005684341886080801486968994140625
+        warehouse_area_id: 1
+        warehouse_area_longitude: 139.6920000000000072759576141834259033203125
+        warehouses:
+        - warehouse_longitude: 139.6920000000000072759576141834259033203125
+          warehouse_name: "ハルフーズ東京工場"
+          warehouse_area_id: 11
+          warehouse_latitude: 35.68900000000000005684341886080801486968994140625
+          warehouse_id: 1
+        - warehouse_longitude: 139.6920000000000072759576141834259033203125
+          warehouse_name: "ハルフーズ東京工場"
+          warehouse_area_id: 11
+          warehouse_latitude: 35.68900000000000005684341886080801486968994140625
+          warehouse_id: 1
+        local_area_id: 1
+      local_area_id: 1
+  Warehouse:
+    type: "object"
+    properties:
+      warehouse_id:
+        type: "integer"
+        example: 1
+      warehouse_area_id:
+        type: "integer"
+        example: 11
+      warehouse_name:
+        type: "string"
+        example: "ハルフーズ東京工場"
+      warehouse_latitude:
+        type: "number"
+        format: "double"
+        example: 35.68900000000000005684341886080801486968994140625
+      warehouse_longitude:
+        type: "number"
+        format: "double"
+        example: 139.6920000000000072759576141834259033203125
+    example:
+      warehouse_longitude: 139.6920000000000072759576141834259033203125
+      warehouse_name: "ハルフーズ東京工場"
+      warehouse_area_id: 11
+      warehouse_latitude: 35.68900000000000005684341886080801486968994140625
+      warehouse_id: 1
+  SearchWarehousesResult:
+    type: "object"
+    properties:
+      is_invading:
+        type: "boolean"
+        example: false
+        description: "倉庫エリアに侵入しているかどうか"
+      warehouses:
+        type: "array"
+        description: "ユーザーが倉庫エリア内にいる場合は、倉庫情報を返す。"
+        items:
+          $ref: "#/definitions/SearchWarehousesResult_warehouses"
+      favorite_warehouses:
+        type: "array"
+        description: "お気に入りを指定した場合は、該当する倉庫情報を返す。"
+        items:
+          $ref: "#/definitions/SearchWarehousesResult_warehouses"
+      warehouse_areas:
+        type: "array"
+        description: "ユーザーが倉庫エリア外にいる場合は、倉庫エリア情報を返す。"
+        items:
+          $ref: "#/definitions/SearchWarehousesResult_warehouse_areas"
+  Comment:
+    type: "object"
+    properties:
+      comment_id:
+        type: "integer"
+        example: 1
+      uid:
+        type: "string"
+        example: "user1"
+      warehouse_id:
+        type: "integer"
+        example: 1
+      contents:
+        type: "string"
+        example: "テストコメント"
+      created_at:
+        type: "string"
+        example: "2022-07-02 00:00:00"
+    example:
+      uid: "user1"
+      contents: "テストコメント"
+      created_at: "2022-07-02 00:00:00"
+      comment_id: 1
+      warehouse_id: 1
+  CommentRequest:
+    type: "object"
+    properties:
+      uid:
+        type: "string"
+        example: "user1"
+      warehouse_id:
+        type: "integer"
+        example: 1
+      contents:
+        type: "string"
+        example: "テストコメント"
+    example:
+      uid: "user1"
+      contents: "テストコメント"
+      warehouse_id: 1
+  User:
+    type: "object"
+    properties:
+      uid:
+        type: "string"
+        example: "user1"
+      user_name:
+        type: "string"
+        example: "ユーザー1"
+      fcm_token_id:
+        type: "string"
+        example: "fcm_token_id"
+    example:
+      uid: "user1"
+      user_name: "ユーザー1"
+      fcm_token_id: "fcm_token_id"
+  UserResponse:
+    type: "object"
+    properties:
+      uid:
+        type: "string"
+        example: "user1"
+      user_name:
+        type: "string"
+        example: "ユーザー1"
+    example:
+      uid: "user1"
+      user_name: "ユーザー1"
+  DelayInformation:
+    type: "object"
+    properties:
+      delay_information_id:
+        type: "integer"
+        example: 1
+      warehouse_id:
+        type: "integer"
+        example: 1
+      warehouse_name:
+        type: "string"
+        example: "ハルフーズ東京工場"
+      delay_time_detail:
+        type: "array"
+        items:
+          $ref: "#/definitions/DelayInformation_delay_time_detail"
+      created_at:
+        type: "string"
+        format: "date-time"
+        example: "2022-07-02 00:00:00"
+      updated_at:
+        type: "string"
+        format: "date-time"
+        example: "2022-07-02 00:00:00"
+    example:
+      warehouse_name: "ハルフーズ東京工場"
+      updated_at: "2022-07-02 00:00:00"
+      delay_time_detail:
+      - delay_state: "normal"
+        answer_count: 3
+      - delay_state: "normal"
+        answer_count: 3
+      created_at: "2022-07-02 00:00:00"
+      delay_information_id: 1
+      warehouse_id: 1
+  DelayInformationRequest:
+    type: "object"
+    required:
+    - "delay_state"
+    - "warehouse_id"
+    properties:
+      warehouse_id:
+        type: "integer"
+        example: 1
+      delay_state:
+        type: "string"
+        example: "normal"
+        description: "normal, pause, halfHour, anHour, impossibleのいずれか"
+    example:
+      delay_state: "normal"
+      warehouse_id: 1
+  inline_response_400:
+    type: "object"
+    properties:
+      error:
+        type: "string"
+        example: "パラメータエラー"
+  LocalAreaResponse_warehouse_areas:
+    type: "object"
+    properties:
+      warehouse_area_id:
+        type: "integer"
+        example: 1
+      local_area_id:
+        type: "integer"
+        example: 1
+      warehouse_area_name:
+        type: "string"
+        example: "東京"
+      warehouse_area_latitude:
+        type: "number"
+        format: "double"
+        example: 35.68900000000000005684341886080801486968994140625
+      warehouse_area_longitude:
+        type: "number"
+        format: "double"
+        example: 139.6920000000000072759576141834259033203125
+      warehouses:
+        type: "array"
+        items:
+          $ref: "#/definitions/Warehouse"
+    example:
+      warehouse_area_name: "東京"
+      warehouse_area_latitude: 35.68900000000000005684341886080801486968994140625
+      warehouse_area_id: 1
+      warehouse_area_longitude: 139.6920000000000072759576141834259033203125
+      warehouses:
+      - warehouse_longitude: 139.6920000000000072759576141834259033203125
+        warehouse_name: "ハルフーズ東京工場"
+        warehouse_area_id: 11
+        warehouse_latitude: 35.68900000000000005684341886080801486968994140625
+        warehouse_id: 1
+      - warehouse_longitude: 139.6920000000000072759576141834259033203125
+        warehouse_name: "ハルフーズ東京工場"
+        warehouse_area_id: 11
+        warehouse_latitude: 35.68900000000000005684341886080801486968994140625
+        warehouse_id: 1
+      local_area_id: 1
+  SearchWarehousesResult_warehouses:
+    type: "object"
+    properties:
+      warehouse_id:
+        type: "integer"
+        example: 1
+      warehouse_name:
+        type: "string"
+        example: "ハルフーズ東京工場"
+      delay_state:
+        type: "string"
+        example: "normal"
+        description: "normal, pause, halfHour, anHour, impossibleのいずれか"
+      distance:
+        type: "number"
+        format: "double"
+        example: 10
+        description: "ユーザーとの距離(km)"
+  SearchWarehousesResult_warehouse_areas:
+    type: "object"
+    properties:
+      warehouse_area_id:
+        type: "integer"
+        example: 1
+      warehouse_area_name:
+        type: "string"
+        example: "東京"
+      delay_state:
+        type: "string"
+        example: "normal"
+        description: "normal, pause, halfHour, anHour, impossibleのいずれか"
+      distance:
+        type: "number"
+        format: "double"
+        example: 10
+        description: "ユーザーとの距離(km)"
+  DelayInformation_delay_time_detail:
+    type: "object"
+    properties:
+      delay_state:
+        type: "string"
+        example: "normal"
+        description: "normal, pause, halfHour, anHour, impossibleのいずれか"
+      answer_count:
+        type: "integer"
+        example: 3
+    example:
+      delay_state: "normal"
+      answer_count: 3
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
