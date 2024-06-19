@@ -295,12 +295,18 @@ paths:
       produces:
         - application/json
       parameters:
+        - in: query
+          name: uid
+          description: ユーザーID
+          required: true
+          type: string
         - in: body
           name: user
           description: ユーザー情報
           required: true
           schema:
-            $ref: "#/definitions/User"
+            type: object
+            $ref: "#/definitions/UserRequest"
       responses:
         200:
           description: 更新成功
@@ -562,6 +568,15 @@ definitions:
       uid:
         type: string
         example: 'user1'
+      user_name:
+        type: string
+        example: 'ユーザー1'
+      fcm_token_id:
+        type: string
+        example: 'fcm_token_id'
+  UserRequest:
+    type: object
+    properties:
       user_name:
         type: string
         example: 'ユーザー1'
