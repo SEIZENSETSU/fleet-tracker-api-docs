@@ -424,9 +424,6 @@ definitions:
             warehouse_area_id:
               type: integer
               example: 1
-            local_area_id:
-              type: integer
-              example: 1
             warehouse_area_name:
               type: string
               example: 東京
@@ -441,7 +438,22 @@ definitions:
             warehouses:
               type: array
               items:
-                $ref: '#/definitions/Warehouse'
+                type: object
+                properties:
+                  warehouse_id:
+                    type: integer
+                    example: 1
+                  warehouse_name:
+                    type: string
+                    example: ハルフーズ東京工場
+                  warehouse_latitude:
+                    type: number
+                    format: double
+                    example: 35.689
+                  warehouse_longitude:
+                    type: number
+                    format: double
+                    example: 139.692
   Warehouse:
     type: object
     properties:
