@@ -25,7 +25,6 @@ exports.areasWarehousesGET = function() {
                 "warehouse_name": "ハルフーズ東京工場",
                 "warehouse_latitude": 35.689,
                 "warehouse_longitude": 139.692,
-                "warehouse_area_id": 11
               }
             ]
           }
