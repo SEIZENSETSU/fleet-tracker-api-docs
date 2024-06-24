@@ -12,15 +12,12 @@ exports.delayGET = function(warehouse_area_id) {
     var examples = {};
     examples['application/json'] = [
       {
-        "delay_information_id": 1,
         "warehouse_id": 1,
         "warehouse_name": "ハルフーズ東京工場",
         "delay_time_detail": [
           {"delay_state": "normal", "answer_count": 3},
           {"delay_state": "pause", "answer_count": 1}
-        ],
-        "created_at": "2022-07-02 00:00:00",
-        "updated_at": "2022-07-02 00:00:00"
+        ]
       }
     ];
     if (Object.keys(examples).length > 0) {

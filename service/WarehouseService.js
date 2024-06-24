@@ -110,22 +110,37 @@ exports.warehousesSearchGET = function(user_latitude, user_longitude, favorite_w
         "warehouses": [
           {
             "warehouse_id": 1,
+            "warehouse_area_id": 11,
             "warehouse_name": "ハルフーズ東京工場",
-            "delay_state": "normal",
+            "average_delay_state": "normal",
+            "delay_time_detail": [
+                {"delay_state": "normal", "answer_count": 3},
+                {"delay_state": "pause", "answer_count": 1}
+            ],
             "distance": 10
           },
           {
             "warehouse_id": 2,
+            "warehouse_area_id": 11,
             "warehouse_name": "ハルフーズ東京工場2",
-            "delay_state": "normal",
+            "average_delay_state": "normal",
+            "delay_time_detail": [
+                {"delay_state": "normal", "answer_count": 3},
+                {"delay_state": "pause", "answer_count": 1}
+            ],
             "distance": 20
           }
         ],
         "favorite_warehouses": [
           {
             "warehouse_id": 5,
+            "warehouse_area_id": 12,
             "warehouse_name": "ハルフーズ大阪工場",
-            "delay_state": "normal",
+            "average_delay_state": "normal",
+            "delay_time_detail": [
+                {"delay_state": "normal", "answer_count": 3},
+                {"delay_state": "pause", "answer_count": 1}
+            ],
             "distance": 10
           }
         ],
@@ -133,7 +148,7 @@ exports.warehousesSearchGET = function(user_latitude, user_longitude, favorite_w
           {
             "warehouse_area_id": 1,
             "warehouse_area_name": "東京",
-            "delay_state": "normal",
+            "average_delay_state": "normal",
             "distance": 10
           }
         ]
@@ -146,7 +161,7 @@ exports.warehousesSearchGET = function(user_latitude, user_longitude, favorite_w
           {
             "warehouse_area_id": 1,
             "warehouse_area_name": "東京",
-            "delay_state": "normal",
+            "average_delay_state": "normal",
             "distance": 10
           }
         ]
@@ -157,8 +172,13 @@ exports.warehousesSearchGET = function(user_latitude, user_longitude, favorite_w
         "favorite_warehouses": [
           {
             "warehouse_id": 5,
+            "warehouse_area_id": 12,
             "warehouse_name": "ハルフーズ大阪工場",
-            "delay_state": "normal",
+            "average_delay_state": "normal",
+            "delay_time_detail": [
+                {"delay_state": "normal", "answer_count": 3},
+                {"delay_state": "pause", "answer_count": 1}
+            ],
             "distance": 10
           }
         ],
@@ -166,7 +186,7 @@ exports.warehousesSearchGET = function(user_latitude, user_longitude, favorite_w
           {
             "warehouse_area_id": 1,
             "warehouse_area_name": "東京",
-            "delay_state": "normal",
+            "average_delay_state": "normal",
             "distance": 10
           }
         ]
