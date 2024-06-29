@@ -112,13 +112,13 @@ exports.warehousesSearchGET = function(user_latitude, user_longitude, favorite_w
             "warehouse_id": 1,
             "warehouse_name": "ハルフーズ東京工場",
             "delay_state": "normal",
-            "distance": 10
+            "distance": 10.00
           },
           {
             "warehouse_id": 2,
             "warehouse_name": "ハルフーズ東京工場2",
             "delay_state": "normal",
-            "distance": 20
+            "distance": 20.00
           }
         ],
         "favorite_warehouses": [
@@ -126,7 +126,7 @@ exports.warehousesSearchGET = function(user_latitude, user_longitude, favorite_w
             "warehouse_id": 5,
             "warehouse_name": "ハルフーズ大阪工場",
             "delay_state": "normal",
-            "distance": 10
+            "distance": 10.00
           }
         ],
         "warehouse_areas": [
@@ -134,7 +134,7 @@ exports.warehousesSearchGET = function(user_latitude, user_longitude, favorite_w
             "warehouse_area_id": 1,
             "warehouse_area_name": "東京",
             "delay_state": "normal",
-            "distance": 10
+            "distance": 10.00
           }
         ]
       },
@@ -147,7 +147,7 @@ exports.warehousesSearchGET = function(user_latitude, user_longitude, favorite_w
             "warehouse_area_id": 1,
             "warehouse_area_name": "東京",
             "delay_state": "normal",
-            "distance": 10
+            "distance": 10.00
           }
         ]
       },
@@ -159,7 +159,7 @@ exports.warehousesSearchGET = function(user_latitude, user_longitude, favorite_w
             "warehouse_id": 5,
             "warehouse_name": "ハルフーズ大阪工場",
             "delay_state": "normal",
-            "distance": 10
+            "distance": 10.00
           }
         ],
         "warehouse_areas": [
@@ -167,7 +167,7 @@ exports.warehousesSearchGET = function(user_latitude, user_longitude, favorite_w
             "warehouse_area_id": 1,
             "warehouse_area_name": "東京",
             "delay_state": "normal",
-            "distance": 10
+            "distance": 10.00
           }
         ]
       }

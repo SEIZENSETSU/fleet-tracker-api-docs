@@ -84,16 +84,16 @@ paths:
                 - warehouse_id: 1
                   warehouse_name: ハルフーズ東京工場
                   delay_state: normal
-                  distance: 10
+                  distance: 10.00
                 - warehouse_id: 2
                   warehouse_name: ハルフーズ東京工場2
                   delay_state: normal
-                  distance: 20
+                  distance: 20.00
               favorite_warehouses:
                 - warehouse_id: 5
                   warehouse_name: ハルフーズ大阪工場
                   delay_state: normal
-                  distance: 10
+                  distance: 10.00
               warehouse_areas: []
             example2:
               is_invading: true
@@ -103,7 +103,7 @@ paths:
                 - warehouse_area_id: 1
                   warehouse_area_name: 東京
                   delay_state: normal
-                  distance: 10
+                  distance: 10.00
             example3:
               is_invading: false
               warehouses: []
@@ -111,12 +111,12 @@ paths:
                 - warehouse_id: 5
                   warehouse_name: ハルフーズ大阪工場
                   delay_state: normal
-                  distance: 10
+                  distance: 10.00
               warehouse_areas:
                 - warehouse_area_id: 1
                   warehouse_area_name: 東京
                   delay_state: normal
-                  distance: 10
+                  distance: 10.00
         404:
           description: 該当する倉庫が存在しません
         500:
@@ -509,7 +509,7 @@ definitions:
             distance:
               type: number
               format: double
-              example: 10
+              example: 10.00
               description: ユーザーとの距離(km)
       warehouse_areas:
         type: array
@@ -530,7 +530,7 @@ definitions:
             distance:
               type: number
               format: double
-              example: 10
+              example: 10.00
               description: ユーザーとの距離(km)
   Comment:
     type: object
