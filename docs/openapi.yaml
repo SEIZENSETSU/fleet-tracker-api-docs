@@ -56,7 +56,7 @@ paths:
           in: query
           description: お気に入りの倉庫ID
           required: false
-          type: integer
+          type: array
           items:
             type: number
         - name: user_latitude
