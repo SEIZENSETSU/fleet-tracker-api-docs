@@ -82,17 +82,29 @@ paths:
               is_invading: true
               warehouses:
                 - warehouse_id: 1
+                  warehouse_area_id: 11
                   warehouse_name: ハルフーズ東京工場
-                  delay_state: normal
+                  average_delay_state: normal
+                  delay_time_detail:
+                      - delay_state: normal
+                        answer_count: 3
+                      - delay_state: pause
+                        answer_count: 1
                   distance: 10.00
                 - warehouse_id: 2
+                  warehouse_area_id: 11
                   warehouse_name: ハルフーズ東京工場2
-                  delay_state: normal
+                  average_delay_state: normal
+                  delay_time_detail:
+                    - delay_state: normal
+                      answer_count: 3
+                    - delay_state: pause
+                      answer_count: 1
                   distance: 20.00
               favorite_warehouses:
                 - warehouse_id: 5
                   warehouse_name: ハルフーズ大阪工場
-                  delay_state: normal
+                  average_delay_state: normal
                   distance: 10.00
               warehouse_areas: []
             example2:
@@ -102,20 +114,7 @@ paths:
               warehouse_areas:
                 - warehouse_area_id: 1
                   warehouse_area_name: 東京
-                  delay_state: normal
-                  distance: 10.00
-            example3:
-              is_invading: false
-              warehouses: []
-              favorite_warehouses:
-                - warehouse_id: 5
-                  warehouse_name: ハルフーズ大阪工場
-                  delay_state: normal
-                  distance: 10.00
-              warehouse_areas:
-                - warehouse_area_id: 1
-                  warehouse_area_name: 東京
-                  delay_state: normal
+                  average_delay_state: normal
                   distance: 10.00
         404:
           description: 該当する倉庫が存在しません
@@ -342,7 +341,7 @@ paths:
       tags:
         - delay
       summary: 遅延情報取得API
-      description: "倉庫IDから遅延情報を取得するAPIです"
+      description: "倉庫エリアIDから遅延情報を取得するAPIです。遅延情報は、24時間以内のものを取得します。"
       produces:
         - application/json
       parameters:
@@ -424,9 +423,6 @@ definitions:
             warehouse_area_id:
               type: integer
               example: 1
-            local_area_id:
-              type: integer
-              example: 1
             warehouse_area_name:
               type: string
               example: 東京
@@ -441,7 +437,22 @@ definitions:
             warehouses:
               type: array
               items:
-                $ref: '#/definitions/Warehouse'
+                type: object
+                properties:
+                  warehouse_id:
+                    type: integer
+                    example: 1
+                  warehouse_name:
+                    type: string
+                    example: ハルフーズ東京工場
+                  warehouse_latitude:
+                    type: number
+                    format: double
+                    example: 35.689
+                  warehouse_longitude:
+                    type: number
+                    format: double
+                    example: 139.692
   Warehouse:
     type: object
     properties:
@@ -478,17 +489,32 @@ definitions:
             warehouse_id:
               type: integer
               example: 1
+            warehouse_area_id:
+              type: integer
+              example: 11
             warehouse_name:
               type: string
               example: ハルフーズ東京工場
-            delay_state:
+            average_delay_state:
               type: string
               example: normal
               description: normal, pause, halfHour, anHour, impossibleのいずれか
+            delay_time_detail:
+              type: array
+              items:
+                type: object
+                properties:
+                  delay_state:
+                    type: string
+                    example: normal
+                    description: normal, pause, halfHour, anHour, impossibleのいずれか
+                  answer_count:
+                    type: integer
+                    example: 3
             distance:
               type: number
               format: double
-              example: 10
+              example: 10.00
               description: ユーザーとの距離(km)
       favorite_warehouses:
         type: array
@@ -499,13 +525,28 @@ definitions:
             warehouse_id:
               type: integer
               example: 1
+            warehouse_area_id:
+                type: integer
+                example: 11
             warehouse_name:
               type: string
               example: ハルフーズ東京工場
-            delay_state:
+            average_delay_state:
               type: string
               example: normal
               description: normal, pause, halfHour, anHour, impossibleのいずれか
+            delay_time_detail:
+                type: array
+                items:
+                    type: object
+                    properties:
+                      delay_state:
+                          type: string
+                          example: normal
+                          description: normal, pause, halfHour, anHour, impossibleのいずれか
+                      answer_count:
+                          type: integer
+                          example: 3
             distance:
               type: number
               format: double
@@ -523,7 +564,7 @@ definitions:
             warehouse_area_name:
               type: string
               example: 東京
-            delay_state:
+            average_delay_state:
               type: string
               example: normal
               description: normal, pause, halfHour, anHour, impossibleのいずれか
@@ -595,9 +636,6 @@ definitions:
   DelayInformation:
     type: "object"
     properties:
-      delay_information_id:
-        type: "integer"
-        example: 1
       warehouse_id:
         type: "integer"
         example: 1
@@ -616,14 +654,6 @@ definitions:
             answer_count:
               type: "integer"
               example: 3
-      created_at:
-        type: "string"
-        example: "2022-07-02 00:00:00"
-        format: "date-time"
-      updated_at:
-        type: "string"
-        example: "2022-07-02 00:00:00"
-        format: "date-time"
   DelayInformationRequest:
     type: "object"
     required:
