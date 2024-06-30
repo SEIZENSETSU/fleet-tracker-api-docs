@@ -114,7 +114,10 @@ exports.warehousesSearchGET = function(user_latitude, user_longitude, favorite_w
             "average_delay_state": "normal",
             "delay_time_detail": [
                 {"delay_state": "normal", "answer_count": 3},
-                {"delay_state": "pause", "answer_count": 1}
+                {"delay_state": "pause", "answer_count": 0},
+                {"delay_state": "halfHour", "answer_count": 0},
+                {"delay_state": "anHour", "answer_count": 0},
+                {"delay_state": "impossible", "answer_count": 0}
             ],
             "distance": 10.00
           },
@@ -125,7 +128,10 @@ exports.warehousesSearchGET = function(user_latitude, user_longitude, favorite_w
             "average_delay_state": "normal",
             "delay_time_detail": [
                 {"delay_state": "normal", "answer_count": 3},
-                {"delay_state": "pause", "answer_count": 1}
+                {"delay_state": "pause", "answer_count": 0},
+                {"delay_state": "halfHour", "answer_count": 0},
+                {"delay_state": "anHour", "answer_count": 0},
+                {"delay_state": "impossible", "answer_count": 0}
             ],
             "distance": 20.00
           }
@@ -138,7 +144,10 @@ exports.warehousesSearchGET = function(user_latitude, user_longitude, favorite_w
             "average_delay_state": "normal",
             "delay_time_detail": [
                 {"delay_state": "normal", "answer_count": 3},
-                {"delay_state": "pause", "answer_count": 1}
+                {"delay_state": "pause", "answer_count": 0},
+                {"delay_state": "halfHour", "answer_count": 0},
+                {"delay_state": "anHour", "answer_count": 0},
+                {"delay_state": "impossible", "answer_count": 0}
             ],
             "distance": 10.00
           }
@@ -176,7 +185,10 @@ exports.warehousesSearchGET = function(user_latitude, user_longitude, favorite_w
             "average_delay_state": "normal",
             "delay_time_detail": [
                 {"delay_state": "normal", "answer_count": 3},
-                {"delay_state": "pause", "answer_count": 1}
+                {"delay_state": "pause", "answer_count": 0},
+                {"delay_state": "halfHour", "answer_count": 0},
+                {"delay_state": "anHour", "answer_count": 0},
+                {"delay_state": "impossible", "answer_count": 0}
             ],
             "distance": 10.00
           }
@@ -191,7 +203,7 @@ exports.warehousesSearchGET = function(user_latitude, user_longitude, favorite_w
         ]
       }
     ];
-    
+
     if (Object.keys(examples).length > 0) {
       resolve(examples['application/json'][0]); // Replace index to 0, 1, or 2 as per the required example
     } else {

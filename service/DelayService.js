@@ -16,7 +16,10 @@ exports.delayGET = function(warehouse_area_id) {
         "warehouse_name": "ハルフーズ東京工場",
         "delay_time_detail": [
           {"delay_state": "normal", "answer_count": 3},
-          {"delay_state": "pause", "answer_count": 1}
+          {"delay_state": "pause", "answer_count": 0},
+          {"delay_state": "halfHour", "answer_count": 0},
+          {"delay_state": "anHour", "answer_count": 0},
+          {"delay_state": "impossible", "answer_count": 0}
         ]
       }
     ];
