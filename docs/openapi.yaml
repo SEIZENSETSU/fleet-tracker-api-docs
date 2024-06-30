@@ -3,6 +3,22 @@ info:
   version: '1.0.0'
   title: 'Fleet Tracker API'
   description: 'このAPIはFleet TrackerのためのAPIです。'
+
+x-google-backend:
+  address: https://fleet-tracker-backend-tnvlhcq2ja-uc.a.run.app
+  deadline: 30.0
+
+securityDefinitions:
+  firebase:
+    authorizationUrl: ""
+    flow: "implicit"
+    type: "oauth2"
+    x-google-issuer: "https://securetoken.google.com/sei-zen-setsu"
+    x-google-jwks_uri: "https://www.googleapis.com/service_accounts/v1/metadata/x509/securetoken@system.gserviceaccount.com"
+    x-google-audiences: "sei-zen-setsu"
+security:
+  - firebase: []
+
 tags:
   - name: warehouse
     description: 倉庫情報API
@@ -20,6 +36,7 @@ schemes:
 paths:
   /warehouses:
     get:
+      operationId: getWarehouses
       tags:
         - warehouse
       summary: 倉庫一覧情報取得API
@@ -45,6 +62,7 @@ paths:
           description: サーバーエラー
   /warehouses/search:
     get:
+      operationId: searchWarehouses
       tags:
         - warehouse
       summary: 倉庫検索API
@@ -75,7 +93,6 @@ paths:
         '200':
           description: 取得成功(例として倉庫エリアと倉庫情報を同時に返していますが本来はどちらかか片方が返されます。)
           schema:
-            type: object
             $ref: '#/definitions/SearchWarehousesResult'
           examples:
             example1:
@@ -86,10 +103,10 @@ paths:
                   warehouse_name: ハルフーズ東京工場
                   average_delay_state: normal
                   delay_time_detail:
-                      - delay_state: normal
-                        answer_count: 3
-                      - delay_state: pause
-                        answer_count: 1
+                    - delay_state: normal
+                      answer_count: 3
+                    - delay_state: pause
+                      answer_count: 1
                   distance: 10.00
                 - warehouse_id: 2
                   warehouse_area_id: 11
@@ -122,6 +139,7 @@ paths:
           description: サーバーエラー
   /areas/warehouses:
     get:
+      operationId: getAreaWarehouses
       tags:
         - warehouse
       summary: ローカルエリアごとの倉庫情報一括取得API
@@ -140,6 +158,7 @@ paths:
           description: サーバーエラー
   /warehouse:
     get:
+      operationId: getWarehouse
       tags:
         - warehouse
       summary: 倉庫情報取得API
@@ -156,7 +175,6 @@ paths:
         '200':
           description: 取得成功
           schema:
-            type: object
             $ref: '#/definitions/Warehouse'
         404:
           description: 該当する倉庫が存在しません
@@ -164,6 +182,7 @@ paths:
           description: サーバーエラー
   /comments:
     get:
+      operationId: getComments
       tags:
         - comment
       summary: コメント取得API
@@ -189,6 +208,7 @@ paths:
           description: サーバーエラー
   /comment:
     post:
+      operationId: postComment
       tags:
         - comment
       summary: コメント登録API
@@ -206,13 +226,13 @@ paths:
         201:
           description: 登録成功
           schema:
-            type: object
             $ref: "#/definitions/CommentRequest"
         404:
           description: 該当するコメントが存在しません
         500:
           description: サーバーエラー
     delete:
+      operationId: deleteComment
       tags:
         - comment
       summary: コメント削除API
@@ -234,6 +254,7 @@ paths:
           description: サーバーエラー
   /user:
     get:
+      operationId: getUser
       tags:
         - user
       summary: ユーザー情報取得API
@@ -250,13 +271,13 @@ paths:
         200:
           description: 取得成功
           schema:
-            type: object
             $ref: "#/definitions/UserResponse"
         404:
           description: ユーザーが存在しません
         500:
           description: サーバーエラー
     post:
+      operationId: postUser
       tags:
         - user
       summary: ユーザー登録API
@@ -274,7 +295,6 @@ paths:
         201:
           description: 登録成功
           schema:
-            type: object
             $ref: "#/definitions/User"
         400:
           description: パラメータエラー
@@ -287,6 +307,7 @@ paths:
         500:
           description: サーバーエラー
     put:
+      operationId: putUser
       tags:
         - user
       summary: ユーザー更新API
@@ -304,19 +325,18 @@ paths:
           description: ユーザー情報
           required: true
           schema:
-            type: object
             $ref: "#/definitions/UserRequest"
       responses:
         200:
           description: 更新成功
           schema:
-            type: object
             $ref: "#/definitions/User"
         404:
           description: ユーザーが存在しません
         500:
           description: サーバーエラー
     delete:
+      operationId: deleteUser
       tags:
         - user
       summary: ユーザー削除API
@@ -338,6 +358,7 @@ paths:
           description: サーバーエラー
   /delay:
     get:
+      operationId: getDelayInformation
       tags:
         - delay
       summary: 遅延情報取得API
@@ -362,6 +383,7 @@ paths:
         500:
           description: サーバーエラー
     post:
+      operationId: postDelayInformation
       tags:
         - delay
       summary: 遅延情報登録API
@@ -379,7 +401,6 @@ paths:
         201:
           description: 登録成功
           schema:
-            type: object
             $ref: "#/definitions/DelayInformationRequest"
         400:
           description: パラメータエラー
@@ -393,6 +414,7 @@ paths:
           description: サーバーエラー
   /hello:
     get:
+      operationId: getHello
       tags:
         - hello
       summary: Hello API
@@ -526,8 +548,8 @@ definitions:
               type: integer
               example: 1
             warehouse_area_id:
-                type: integer
-                example: 11
+              type: integer
+              example: 11
             warehouse_name:
               type: string
               example: ハルフーズ東京工場
@@ -536,17 +558,17 @@ definitions:
               example: normal
               description: normal, pause, halfHour, anHour, impossibleのいずれか
             delay_time_detail:
-                type: array
-                items:
-                    type: object
-                    properties:
-                      delay_state:
-                          type: string
-                          example: normal
-                          description: normal, pause, halfHour, anHour, impossibleのいずれか
-                      answer_count:
-                          type: integer
-                          example: 3
+              type: array
+              items:
+                type: object
+                properties:
+                  delay_state:
+                    type: string
+                    example: normal
+                    description: normal, pause, halfHour, anHour, impossibleのいずれか
+                  answer_count:
+                    type: integer
+                    example: 3
             distance:
               type: number
               format: double
